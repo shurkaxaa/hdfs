@@ -36,3 +36,15 @@ release: hdfs
 	tar -cvzf $(RELEASE_NAME).tar.gz $(RELEASE_NAME)
 
 .PHONY: clean clean-protos install test release
+
+make_in_docker:
+	svc=
+	mkdir -p build
+	docker run --rm \
+		-v `pwd`:/app \
+		-e CGO_ENABLED=$(CGO_ENABLED) \
+		-e GOOS=$(GOOS) \
+		-e GOARCH=$(GOARCH) \
+		-e GOARM=$(GOARM) \
+		golang:1.14.4-alpine \
+		/bin/sh -c "cd /app && go build -mod=vendor -ldflags '-s -w -X main.version=$(TRAVIS_TAG)' -o build/hdfs ./cmd/hdfs"
