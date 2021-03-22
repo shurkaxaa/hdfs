@@ -8,9 +8,9 @@ import (
 	"os/user"
 	"time"
 
-	"github.com/colinmarc/hdfs/v2"
-	"github.com/colinmarc/hdfs/v2/hadoopconf"
 	"github.com/pborman/getopt"
+	"github.com/shurkaxaa/hdfs/v2"
+	"github.com/shurkaxaa/hdfs/v2/hadoopconf"
 )
 
 // TODO: cp, tree, test, trash
@@ -37,6 +37,8 @@ Valid commands:
   getmerge SOURCE DEST
   put SOURCE DEST
   df [-h]
+  snapshot SOURCE NAME
+  snapshotrm SOURCE NAME
 `, os.Args[0])
 
 	lsOpts = getopt.New()
@@ -146,6 +148,10 @@ func main() {
 	case "df":
 		dfOpts.Parse(argv)
 		df(*dfh)
+	case "snapshot":
+		snapshotadd(argv[1:])
+	case "snapshotrm":
+		snapshotrm(argv[1:])
 	// it's a seeeeecret command
 	case "complete":
 		complete(argv)
