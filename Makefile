@@ -1,3 +1,5 @@
+CGO_ENABLED ?= 0
+GOARCH ?= amd64
 HADOOP_COMMON_PROTOS = $(shell find internal/protocol/hadoop_common -name '*.proto')
 HADOOP_HDFS_PROTOS = $(shell find internal/protocol/hadoop_hdfs -name '*.proto')
 GENERATED_PROTOS = $(shell echo "$(HADOOP_HDFS_PROTOS) $(HADOOP_COMMON_PROTOS)" | sed 's/\.proto/\.pb\.go/g')
