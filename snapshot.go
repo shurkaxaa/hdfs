@@ -91,7 +91,12 @@ func (c *Client) ListSnapshottableFolders() ([]string, error) {
 		if folder == nil {
 			continue
 		}
-		rv = append(rv, filepath.Join(string(folder.GetParentFullpath()), string(folder.DirStatus.Path)))
+		path := filepath.Join(string(folder.GetParentFullpath()), string(folder.DirStatus.Path))
+		// w/a strange case fs root will be empty!
+		if path == "" {
+			path = "/"
+		}
+		rv = append(rv, path)
 	}
 	return rv, nil
 }
