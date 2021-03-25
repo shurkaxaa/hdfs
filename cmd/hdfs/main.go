@@ -37,7 +37,10 @@ Valid commands:
   getmerge SOURCE DEST
   put SOURCE DEST
   df [-h]
-  snapshot SOURCE NAME
+  snapshotdirs
+  snapshotallow SOURCE
+  snapshotdisallow SOURCE
+  snapshotdd SOURCE NAME
   snapshotrm SOURCE NAME
 `, os.Args[0])
 
@@ -148,10 +151,16 @@ func main() {
 	case "df":
 		dfOpts.Parse(argv)
 		df(*dfh)
-	case "snapshot":
+	case "snapshotallow":
+		snapshotallow(argv[1:])
+	case "snapshotdisallow":
+		snapshotdisallow(argv[1:])
+	case "snapshotadd":
 		snapshotadd(argv[1:])
 	case "snapshotrm":
 		snapshotrm(argv[1:])
+	case "snapshotdirs":
+		snapshotdirs()
 	// it's a seeeeecret command
 	case "complete":
 		complete(argv)

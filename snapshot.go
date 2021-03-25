@@ -1,6 +1,8 @@
 package hdfs
 
 import (
+	"path/filepath"
+
 	hdfs "github.com/shurkaxaa/hdfs/v2/internal/protocol/hadoop_hdfs"
 )
 
@@ -70,4 +72,26 @@ func (c *Client) DeleteSnapshot(dir, name string) error {
 		return interpretException(err)
 	}
 	return nil
+}
+
+func (c *Client) ListSnapshottableFolders() ([]string, error) {
+	grpcReq := &hdfs.GetSnapshottableDirListingRequestProto{}
+	grpcRes := &hdfs.GetSnapshottableDirListingResponseProto{}
+
+	err := c.namenode.Execute("getSnapshottableDirListing", grpcReq, grpcRes)
+	if err != nil {
+		return nil, interpretException(err)
+	}
+	if grpcRes.SnapshottableDirList == nil {
+		return []string{}, nil
+	}
+
+	rv := []string{}
+	for _, folder := range grpcRes.SnapshottableDirList.SnapshottableDirListing {
+		if folder == nil {
+			continue
+		}
+		rv = append(rv, filepath.Join(string(folder.GetParentFullpath()), string(folder.DirStatus.Path)))
+	}
+	return rv, nil
 }
